@@ -1,92 +1,7 @@
 <template>
-  <div id="app">
-    <!-- Navbar -->
     <div>
-      <div>
-        <b-navbar toggleable="lg" type="dark" variant="primary">
-          <b-navbar-brand class="titile-nav">Betjader Ortiz</b-navbar-brand>
 
-          <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-          <b-collapse id="nav-collapse" is-nav>
-            <b-navbar-nav>
-              <b-nav-item>Tarea 1</b-nav-item>
-              <b-nav-item style="color: ;">Page Layout</b-nav-item>
-            </b-navbar-nav>
-          </b-collapse>
-        </b-navbar>
-      </div>
-    </div>
-
-
-    <header>
-      <h2 class="header-text">Mis jugadores favoritos <span class="nba">NBA</span></h2>
-    </header>
-
-    <div class="container-fluid">
-      <b-row>
-        <b-col md="3">
-          <div class=" p-3">
-            <!-- <h3>Menú</h3>
-            <b-form-input size="lg" class="mr-sm-2" placeholder="Buscar"></b-form-input>
-            <br>
-            <b-list-group>
-
-              <b-list-group-item class="hover-sidebar-item">
-                <b-avatar
-                  src="https://graffica.info/wp-content/uploads/2017/08/NBA-logo-png-download-free.png"></b-avatar>
-                <span class="sidebar-text">Historia</span>
-              </b-list-group-item>
-              <b-list-group-item>
-                <b-avatar src="https://cdn.nba.com/headshots/nba/latest/1040x760/203897.png"></b-avatar>
-                <span class="sidebar-text">jugadores</span>
-              </b-list-group-item>
-              <b-list-group-item>
-                <b-avatar src="https://i.pinimg.com/originals/c3/be/ee/c3beee8e8cff0bf4bacae8beb6874bb4.jpg"></b-avatar>
-                <span class="sidebar-text">Equipos</span>
-              </b-list-group-item>
-              <b-list-group-item>
-                <b-avatar
-                  src="https://a3.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fleagues%2F500%2Fnba_gleague.png"></b-avatar>
-                <span class="sidebar-text">G-leage</span>
-              </b-list-group-item>
-              <b-list-group-item>
-                <b-avatar
-                  src="https://cdn.vox-cdn.com/thumbor/_JrcqQl__Q5YTE29q7atQWBpg4M=/303x0:4277x3300/1200x800/filters:focal(2117x493:2885x1261)/cdn.vox-cdn.com/uploads/chorus_image/image/73045966/1910944404.0.jpg"></b-avatar>
-                <span class="sidebar-text">Entrenadores</span>
-              </b-list-group-item>
-              <b-list-group-item>
-                <b-avatar src="https://pbs.twimg.com/profile_images/698242148085407744/dq4EFGx4_400x400.png"></b-avatar>
-                <span class="sidebar-text">Estadisticas</span>
-              </b-list-group-item>
-            </b-list-group> -->
-            <b-nav vertical class="pt-5">
-
-              <b-nav-item 
-                ><b-link :to="{ name: 'inicio' }">
-               Inicio
-                  </b-link>
-              </b-nav-item>
-            
-              <b-nav-item 
-                ><b-link :to="{ name: 'electronicos' }">Tienda de jugetes</b-link>
-              </b-nav-item>
-            
-              <b-nav-item 
-                ><b-link :to="{ name: 'electrodomesticos' }">Tienda de electrodomesticos</b-link>
-              </b-nav-item>
-              <b-nav-item 
-              ><b-link :to="{ name: 'hogar' }">Tienda de Hogar</b-link>
-            </b-nav-item>
-            </b-nav>
-          </div>
-        </b-col>
-
-
-        <b-col md="9">
-          <div class="px-3 py-2">
-
-            <!-- <b-container class="bv-example-row">
+        <b-container class="bv-example-row">
               <b-row>
                 <b-col>
 
@@ -198,80 +113,15 @@
                 </b-col>
               </b-row>
             </b-container>
--->
-
-<!-- Principal -->
-        <div>
-          <router-view/>
-        </div>
-          </div> 
-        </b-col>
-      </b-row>
     </div>
-
-
-    <footer class="mt-auto">
-      <div class="bg-light p-3">
-        <p class="footer-text">Pagina echa por Betjader Ortiz Delgado 8B-IDGS</p>
-      </div>
-    </footer>
-  </div>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        slide: 0,
-        sliding: null
-      }
-    },
-    methods: {
-      onSlideStart(slide) {
-        this.sliding = true
-      },
-      onSlideEnd(slide) {
-        this.sliding = false
-      }
-    }
-  }
+export default {
+
+}
 </script>
 
 <style>
-body {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
 
-.titile-nav {
-  font-size: 30px;
-  color: #085ba6;
-  font-weight: bold;
-}
-
-.header-text {
-  font-size: 30px;
-  text-align: center;
-  margin-top: 20px;
-}
-
-.nba {
-  color: #085ba6;
-  font-size: 30px;
-  font-family: 'Bebas Neue', sans-serif;
-  font-weight: bold;
-}
-
-.sidebar-text {
-  font-size: 20px;
-  margin-left: 10px;
-  color: red;
-}
-
-.footer-text {
-  font-size: 20px;
-  text-align: center;
-  color: #085ba6;
-}
 </style>
