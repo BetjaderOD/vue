@@ -3,6 +3,8 @@
     <b-breadcrumb :items="items"></b-breadcrumb>
 
     <h1>Industrial</h1>
+    <b-button to="/inicio">Inicio</b-button>
+
   </div>
 </template>
 
