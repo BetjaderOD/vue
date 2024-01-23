@@ -5,23 +5,22 @@ Vue.use(VueRouter);
 
 const routes = [
   //ruta base
-  {
-    path: '/',
-    redirect: '/inicio'
-  },
-  {
-    path: '/',
-    component: {
-      render(c) {
-        return c('router-view')
-      },
-    },
-    children: [
+  
       {
-        path: '/inicio',
-        name: 'inicio',
-        component: () => import('../components/Inicio.vue')
+          path:'*',
+          component:()=> import('../views/ErrorPages/Error404.vue')
       },
+      {
+        path:'/',
+        redirect:'/inicio',
+      },
+    
+    {
+      path: '/inicio',
+      component: ()=> import ('../Inicio.vue'),
+
+      children: [
+      
       {
         path: '/electronicos',
         name: 'electronicos',
@@ -51,7 +50,13 @@ const routes = [
         path: '/industriales',
         name: 'industriales',
         component: () => import('../components/hogar/Industriales.vue')
-      }
+      },  {
+        path: '/formulario',
+        name:'formulario',    
+        component: () => import('../components/Formulario.vue')
+    },
+     
+      
     ]
   }
 ]

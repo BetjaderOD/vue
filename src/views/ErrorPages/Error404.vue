@@ -1,5 +1,5 @@
 <template>
-  <router-view/>
+  <h1>Error 404</h1>
 </template>
 
 <script>
