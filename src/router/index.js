@@ -55,6 +55,11 @@ const routes = [
         name:'formulario',    
         component: () => import('../components/Formulario.vue')
     },
+    {
+      path:'/persona',
+      name:'persona',
+      component: () => import('../components/Persona.vue')
+    }
      
       
     ]

@@ -52,6 +52,9 @@
             <b-nav-item>
                 <b-button  to="/formulario">Formulario</b-button>
           </b-nav-item>
+          <b-nav-item>
+                <b-button  to="/persona">Persona</b-button>
+          </b-nav-item>
 
               </b-nav>
             </div>
@@ -187,7 +190,7 @@
   
       <footer class="mt-auto">
         <div class="bg-light p-3">
-          <p class="footer-text">Pagina echa por Betjader Ortiz Delgado 8B-IDGS</p>
+          <p class="footer-text">Pagina hecha por Betjader Ortiz Delgado 8B-IDGS</p>
         </div>
       </footer>
     </div>
