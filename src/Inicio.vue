@@ -55,6 +55,9 @@
           <b-nav-item>
                 <b-button  to="/persona">Persona</b-button>
           </b-nav-item>
+          <b-nav-item>
+                <b-button  to="/peliculas">Peliculas</b-button>
+          </b-nav-item>
 
               </b-nav>
             </div>
