@@ -58,7 +58,10 @@
         <b-card-sub-title class="mb-2">direccion    </b-card-sub-title>
         
     </b-card-body>
-
+    <template #footer>
+        <b-button class="outline-primary mx-2">Button</b-button>
+        <b-button variant="outline-primary">Button</b-button>
+      </template>
 
 
    
