@@ -2,12 +2,12 @@ import axios from "axios";
 
 const base_url = 'http://localhost:8080/peliculas/'
 
-const crearPelicula = async (titulo, director, duracion, enlace) => {
+const crearPelicula = async (titulo, director, duracion, enlace, categoriaId) => {
   const params = {
     titulo,
     director,
     categoria: {
-      id: 1
+      id: categoriaId
     },
     duracion,
     enlace
@@ -44,6 +44,19 @@ const obtenerPeliculas = async () => {
     throw error;
   }
 }
+const obtenerCategorias = async () => {
+  const url = 'http://localhost:8080/categorias/getAll';
+  console.log(url);
+
+  try {
+    const response = await axios.get(url);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log('Error al obtener las categorias');
+    throw error;
+  }
+}
 
 const eliminarPelicula = async (id) => {
   const url = `${base_url}delete/${id}`;
@@ -58,7 +71,7 @@ const eliminarPelicula = async (id) => {
   }
 }
 
-const editarPelicula = async (id, titulo, director, duracion, enlace) => {
+const editarPelicula = async (id, titulo, director, duracion, enlace, categoriaId) => {
   const url = `${base_url}update`;
 
   const data = {
@@ -66,11 +79,12 @@ const editarPelicula = async (id, titulo, director, duracion, enlace) => {
     titulo,
     director,
     categoria: {
-      id: 1
+      id: categoriaId
     },
     duracion,
     enlace
   };
+  console.log(data);
 
   try {
     const response = await axios.put(url, data);
@@ -82,6 +96,8 @@ const editarPelicula = async (id, titulo, director, duracion, enlace) => {
   }
 };
 
+
+
 export default {
-  crearPelicula, obtenerPeliculas, eliminarPelicula, editarPelicula
+  crearPelicula, obtenerPeliculas, eliminarPelicula, editarPelicula, obtenerCategorias
 };

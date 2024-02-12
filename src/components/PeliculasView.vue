@@ -48,8 +48,9 @@
             required />
           <br>
           <label class="mx-1" for="categorias">Selecciona la categoria</label>
-          <b-form-select id="categorias" v-model="peliculaSeleccionada.categoria.nombre"
-            :options="form.categorias"></b-form-select>
+          <b-form-select id="categorias" v-model="peliculaSeleccionada.categoria.id" :options="form.categorias"
+            @change="onCategoriaChange"></b-form-select>
+
           <br>
           <br>
         </b-form-group>
@@ -90,7 +91,7 @@ export default {
         enlace: '',
         duracion: '',
         selected: null,
-        categorias: [{ value: 'a', text: 'Estatico' }],
+        categorias: [],
       },
       show: true,
       formError: '',
@@ -107,6 +108,7 @@ export default {
   },
   mounted() {
     this.obtenerPeliculas();
+    this.obtenerCategorias();
   },
   methods: {
     async obtenerPeliculas() {
@@ -115,6 +117,15 @@ export default {
         this.peliculas = data.object;
       } catch (error) {
         console.error('Error al obtener las películas', error);
+      }
+    },
+
+    async obtenerCategorias() {
+      try {
+        const data = await peliculasAxios.obtenerCategorias();
+        this.form.categorias = data.object.map(categoria => ({ value: categoria.id, text: categoria.nombre }));
+      } catch (error) {
+        console.error('Error al obtener las categorias', error);
       }
     },
     async eliminarPelicula(id) {
@@ -144,7 +155,8 @@ export default {
           this.peliculaSeleccionada.titulo,
           this.peliculaSeleccionada.director,
           this.peliculaSeleccionada.duracion,
-          this.peliculaSeleccionada.enlace
+          this.peliculaSeleccionada.enlace,
+          this.peliculaSeleccionada.categoria.id
         );
         alert('Película editada correctamente');
         this.obtenerPeliculas();
@@ -163,7 +175,7 @@ export default {
         return;
       }
       try {
-        await peliculasAxios.crearPelicula(this.form.titulo, this.form.director, this.form.duracion, this.form.enlace);
+        await peliculasAxios.crearPelicula(this.form.titulo, this.form.director, this.form.duracion, this.form.enlace, this.form.selected);
         alert('Formulario enviado correctamente');
         this.obtenerPeliculas();
       } catch (error) {
@@ -187,7 +199,8 @@ export default {
         director: '',
         enlace: '',
         duracion: '',
-        categorias: [{ value: 'a', text: 'Estatico' }],
+        selected: null,
+        categorias: this.form.categorias
       };
       this.formError = '';
     }
