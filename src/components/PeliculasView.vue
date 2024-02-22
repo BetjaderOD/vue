@@ -1,6 +1,8 @@
 <template>
   <div id="Peliculas">
-    <h1>Peliculas</h1>
+    <h1 ref="heading" @click="applyBounceAnimation">Peliculas <span style="color: red; font-weight: 500;">
+        ¡¡¡PRESIONAME!!!</span></h1>
+
 
     <b-button v-b-modal.modal-1 variant="outline-primary">Agregar al catalogo</b-button>
     <br>
@@ -66,9 +68,10 @@
     <div class="row">
 
       <div class="drop-zone-1 col " @drop="onDrop($event)" @dragstart="startDrag($event)">
-        <div v-show="showElement" class="drag-el" style="background-color: blue;" draggable
+        <div v-show="showElement" class="drag-el" style="background-color: rgb(179, 179, 247);" draggable
           @dragstart="startDrag($event)">
           <div class="container text-center mt-5">
+            <h1>Formulario</h1>
             <b-form @submit="onSubmit" @reset="onReset" v-if="show">
 
               <b-form-group id="input-group-1" label-for="input-1">
@@ -100,8 +103,7 @@
 
 
       <div class=" col drop-zone" @drop="onDrop($event)" @dragover.prevent @dragenter.prevent>
-        <div class="" style="background-color: aqua;">
-        </div>
+        <h4>Suelta el formulario aqui para realizar en envio o usa el boton "Guardar"</h4>
       </div>
     </div>
 
@@ -128,7 +130,7 @@
 
 <script>
 import peliculasAxios from './services/PeliculasAxios'
-import '@asika32764/vue-animate/dist/vue-animate.css';
+import { bounce } from '@asika32764/vue-animate';
 
 export default {
   data() {
@@ -167,10 +169,18 @@ export default {
     window.removeEventListener("scroll", this.onScroll);
   },
   methods: {
+
+    applyBounceAnimation() {
+      // Accede al elemento h1 utilizando refs
+      const element = this.$refs.heading;
+
+      // Aplica la animación de "bounce" al elemento h1
+      bounce(element);
+    },
     onDrop(event) {
       console.log('Soltado');
       console.log(event);
-      // this.onSubmit();
+      this.onSubmit();
 
     },
 
@@ -188,18 +198,13 @@ export default {
     },
     onScroll() {
 
-      // Obtiene la posición actual del scroll
       const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
       console.log(currentScrollPosition);
 
-      // La función abs para tener valores absolutos y se delimita con un offset o bien llamado 
-      // margen para que el valor de la posición sea después de desplazarce y no desde que uno se desplaza
-      if (Math.abs(currentScrollPosition - this.lastScrollPosition) < 60) {
+      if (Math.abs(currentScrollPosition - this.lastScrollPosition) < 20) {
         return;
       }
-      // aqui determinamos si la posición es mayor a la posición anterior. Entonces, si lo es, mostramos el elemento.
       this.showElement = currentScrollPosition < this.lastScrollPosition;
-      //  
       this.lastScrollPosition = currentScrollPosition;
     },
     async obtenerCategorias() {
@@ -251,7 +256,7 @@ export default {
       this.resetForm();
     },
     async onSubmit(event) {
-      event.preventDefault();
+      // event.preventDefault();
 
       if (!this.validateForm()) {
         return;
@@ -298,7 +303,7 @@ export default {
 }
 
 .drop-zone {
-  background-color: red;
+  background-color: rgb(254, 149, 149);
   margin-bottom: 10px;
   padding: 10px;
 }
