@@ -11,7 +11,7 @@
       <input type="text" id="name" v-model="form.name" required>
 
       <br>
-      <div class="frc-captcha" ref="container" data-sitekey="FCMJFL85J8RD5KAN" data-lang="es">
+      <div class="frc-captcha" ref="container" data-sitekey="FCMNF1US5FRBRBTU" data-lang="es">
 
       </div>
       <br>
@@ -64,9 +64,9 @@ export default {
       console.log(solution);
     },
     async verifyCaptcha(solution) {
-
+      console.log("solution",solution)
       let response = await CaptchaService.verificarCaptcha(solution)
-      console.log(response)
+      console.log("hola",response)
     },
     doneCallback(solution) {
       this.verifyCaptcha(solution)
