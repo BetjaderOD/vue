@@ -31,7 +31,11 @@
       <div v-if="formError" class="alert alert-danger">{{ formError }}</div>
 
     </b-modal>
+
+
+
     <b-modal id="modal-editar" title="Editar película">
+
       <b-form @submit="editarPelicula" @reset="resetForm">
         <b-form-group id="input-group-1" label-for="input-1">
           <br>
@@ -58,6 +62,49 @@
       </b-form>
       <div v-if="formError" class="alert alert-danger">{{ formError }}</div>
     </b-modal>
+    <!-- Formulario arrastrar -->
+    <div class="row">
+
+      <div class="drop-zone-1 col " @drop="onDrop($event)" @dragstart="startDrag($event)">
+        <div v-show="showElement" class="drag-el" style="background-color: blue;" draggable
+          @dragstart="startDrag($event)">
+          <div class="container text-center mt-5">
+            <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+
+              <b-form-group id="input-group-1" label-for="input-1">
+                <br>
+                <b-form-input id="input-1" v-model="form.titulo" type="text" placeholder="Ingresa el titulo " required />
+                <br>
+                <b-form-input id="input-2" v-model="form.director" type="text" placeholder="Ingresa el Director"
+                  required />
+                <br>
+                <b-form-input id="input-3" v-model="form.enlace" type="text"
+                  placeholder="Ingresa el enlace de la imagen" />
+                <br>
+
+                <b-form-input id="input-4" v-model="form.duracion" type="text" placeholder="Ingresa duracion" required />
+                <br>
+                <label class="mx-1" for="categorias">Selecciona la categoria</label>
+                <b-form-select id="categorias" v-model="form.selected" :options="form.categorias"></b-form-select>
+                <br>
+                <br>
+              </b-form-group>
+
+              <b-button type="submit" variant="primary">Guardar</b-button>
+            </b-form>
+
+            <div v-if="formError" class="alert alert-danger">{{ formError }}</div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class=" col drop-zone" @drop="onDrop($event)" @dragover.prevent @dragenter.prevent>
+        <div class="" style="background-color: aqua;">
+        </div>
+      </div>
+    </div>
+
     <div>
       <b-row>
         <b-col cols="12" md="4" v-for="(pelicula, index) in peliculas" :key="pelicula.id">
@@ -81,10 +128,14 @@
 
 <script>
 import peliculasAxios from './services/PeliculasAxios'
+import '@asika32764/vue-animate/dist/vue-animate.css';
 
 export default {
   data() {
     return {
+      showElement: true,
+
+      lastScrollPosition: 0,
       form: {
         titulo: '',
         director: '',
@@ -109,8 +160,24 @@ export default {
   mounted() {
     this.obtenerPeliculas();
     this.obtenerCategorias();
+    window.addEventListener("scroll", this.onScroll);
+
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.onScroll);
   },
   methods: {
+    onDrop(event) {
+      console.log('Soltado');
+      console.log(event);
+      // this.onSubmit();
+
+    },
+
+    startDrag(event) {
+      console.log('Drag started');
+      console.log(event);
+    },
     async obtenerPeliculas() {
       try {
         const data = await peliculasAxios.obtenerPeliculas();
@@ -119,7 +186,22 @@ export default {
         console.error('Error al obtener las películas', error);
       }
     },
+    onScroll() {
 
+      // Obtiene la posición actual del scroll
+      const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+      console.log(currentScrollPosition);
+
+      // La función abs para tener valores absolutos y se delimita con un offset o bien llamado 
+      // margen para que el valor de la posición sea después de desplazarce y no desde que uno se desplaza
+      if (Math.abs(currentScrollPosition - this.lastScrollPosition) < 60) {
+        return;
+      }
+      // aqui determinamos si la posición es mayor a la posición anterior. Entonces, si lo es, mostramos el elemento.
+      this.showElement = currentScrollPosition < this.lastScrollPosition;
+      //  
+      this.lastScrollPosition = currentScrollPosition;
+    },
     async obtenerCategorias() {
       try {
         const data = await peliculasAxios.obtenerCategorias();
@@ -208,4 +290,22 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.drop-zone {
+  background-color: #eee;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.drop-zone {
+  background-color: red;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.drag-el {
+  background-color: #fff;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+</style>
