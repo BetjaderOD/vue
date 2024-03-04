@@ -2,7 +2,7 @@ import axios from "axios";
 
 const base_url = 'http://localhost:8080/peliculas/'
 
-const crearPelicula = async (titulo, director, duracion, enlace, categoriaId) => {
+const crearPelicula = async (titulo, director, duracion, enlace, categoriaId, fecha) => {
   const params = {
     titulo,
     director,
@@ -10,6 +10,7 @@ const crearPelicula = async (titulo, director, duracion, enlace, categoriaId) =>
       id: categoriaId
     },
     duracion,
+    fecha,
     enlace
   };
   console.log(params)
@@ -71,7 +72,7 @@ const eliminarPelicula = async (id) => {
   }
 }
 
-const editarPelicula = async (id, titulo, director, duracion, enlace, categoriaId) => {
+const editarPelicula = async (id, titulo, director, duracion, enlace, categoriaId, fecha) => {
   const url = `${base_url}update`;
 
   const data = {
@@ -82,7 +83,8 @@ const editarPelicula = async (id, titulo, director, duracion, enlace, categoriaI
       id: categoriaId
     },
     duracion,
-    enlace
+    enlace,
+    fecha
   };
   console.log(data);
 
@@ -95,6 +97,8 @@ const editarPelicula = async (id, titulo, director, duracion, enlace, categoriaI
     throw error;
   }
 };
+
+
 
 
 

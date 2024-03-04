@@ -4,10 +4,49 @@
   <!-- Animacion  llamando a la funcion  -->
     <h1 ref="heading" @click="applyBounceAnimation">Peliculas <span style="color: red; font-weight: 500;">
         ¡¡¡PRESIONAME!!!</span></h1>
+<b-form @submit="onSubmitFilter" >
+<h3>Buscar por nombre y director</h3>
+  <input type="text" v-model="formFilter.nombreP" placeholder="Buscar por titulo" class="form-control">
+  <br>
+  <input type="text" v-model="formFilter.directorP" placeholder="Buscar por director" class="form-control">
+  <br>
+  <div class="col">
+
+    <b-button class=" mx-3"  @click="onSubmitFilter"  @reset="onResetFilter"   variant="outline-primary">Buscar</b-button>
+    <b-button  @click="obtenerPeliculas"  variant="outline-primary">Ver todas las peliculas</b-button>
+  </div>
+  <br>
+</b-form>
 
 
-    <b-button v-b-modal.modal-1 variant="outline-primary">Agregar al catalogo</b-button>
+<b-form @submit="onSubmitFilterCat">
+  <h3>Buscar por categoria</h3>
+  <label class="mx-1" for="categorias">Selecciona la categoria</label>
+  <b-form-select id="categorias" v-model="formFilter.selected" :options="form.categorias"></b-form-select>
+  <div class="col">
+    <b-button class=" mx-3" type="submit" variant="outline-primary">Buscar</b-button>
+    <b-button @click="obtenerPeliculas" variant="outline-primary">Ver todas las peliculas</b-button>
+  </div>
+  <br>
+</b-form>
+<b-form @submit="onSubmitFilterFec">
+  <h3>Buscar por rango de fechas</h3>
+ <label class="mx-1" for="fechaInicio">Fecha de inicio</label>
+  <b-form-input id="fechaInicio" v-model="formFilter.fechaInicio" type="date" placeholder="Ingresa la fecha de inicio" required />
+  <label class="mx-1" for="fechaFin">Fecha de fin</label>
+  <b-form-input id="fechaFin" v-model="formFilter.fechaFin" type="date" placeholder="Ingresa la fecha de fin" required />
+  <br>
+  <div class="col">
+    <b-button class=" mx-3" type="submit" variant="outline-primary">Buscar</b-button>
+    <b-button @click="obtenerPeliculas" variant="outline-primary">Ver todas las peliculas</b-button>
+  </div>
+  <br>
+</b-form>
+
+  <br>  
+  <b-button v-b-modal.modal-1 variant="outline-primary">Agregar al catalogo</b-button>
     <br>
+
     <br>
     <b-modal id="modal-1" title="Agregar pelicula">
       <b-form @submit="onSubmit" @reset="onReset" v-if="show">
@@ -22,6 +61,8 @@
           <br>
 
           <b-form-input id="input-4" v-model="form.duracion" type="text" placeholder="Ingresa duracion" required />
+          <br>
+           <b-form-input id="input-5" v-model="form.fecha" type="date" placeholder="Ingresa la fecha" required />
           <br>
           <label class="mx-1" for="categorias">Selecciona la categoria</label>
           <b-form-select id="categorias" v-model="form.selected" :options="form.categorias"></b-form-select>
@@ -55,10 +96,12 @@
           <b-form-input id="input-4" v-model="peliculaSeleccionada.duracion" type="text" placeholder="Ingresa duracion"
             required />
           <br>
+          <b-form-input id="input-5" v-model="peliculaSeleccionada.fecha" type="date" placeholder="Ingresa la fecha"
+            required />
           <label class="mx-1" for="categorias">Selecciona la categoria</label>
           <!-- Cargar los elementos de categorias -->
           <b-form-select id="categorias" v-model="peliculaSeleccionada.categoria.id" :options="form.categorias"
-            @change="onCategoriaChange"></b-form-select>
+          ></b-form-select>
 
           <br>
           <br>
@@ -103,6 +146,8 @@
 
                 <b-form-input id="input-4" v-model="form.duracion" type="text" placeholder="Ingresa duracion" required />
                 <br>
+                 <b-form-input id="input-5" v-model="form.fecha" type="date" placeholder="Ingresa la fecha" required />
+          <br>
                 <label class="mx-1" for="categorias">Selecciona la categoria</label>
                    <!-- Identificador del componente, Valor seleccionado vinculado a una propiedad, Lista de opciones disponibles  -->
                 <b-form-select id="categorias" v-model="form.selected" :options="form.categorias"></b-form-select>
@@ -133,6 +178,8 @@
        <!-- 
     Utilizando 'v-for' para iterar sobre el array 'peliculas'.
     ':key="pelicula.id"' asegura que cada elemento iterado tenga una clave única basada en su ID -->
+       <div v-if="peliculas.length > 0">
+      <b-row>
         <b-col cols="12" md="4" v-for="(pelicula, index) in peliculas" :key="pelicula.id">
           <b-card no-body style="max-width: 20rem;" class="mb-3">
             <img :src="pelicula.enlace" class="card-img-top" alt="...">
@@ -141,11 +188,14 @@
               <p class="card-text">Director: {{ pelicula.director }}</p>
               <p class="card-text">Categoría: {{ pelicula.categoria.nombre }}</p>
               <p class="card-text">Duración: {{ pelicula.duracion }}</p>
+              <p class="card-text">Fecha: {{ pelicula.fecha }}</p>
               <b-button @click="abrirModalEditar(pelicula)" variant="outline-primary">Editar</b-button>
               <b-button class='mx-2' @click="eliminarPelicula(pelicula.id)" variant="outline-danger">Eliminar</b-button>
             </b-card-body>
           </b-card>
         </b-col>
+      </b-row>
+    </div>
       </b-row>
     </div>
 
@@ -154,11 +204,21 @@
 
 <script>
 import peliculasAxios from './services/PeliculasAxios'
+import peliculasFilter from './services/FilterAxios'
+
 import { bounce } from '@asika32764/vue-animate';
 
 export default {
   data() {
     return {
+       // Formulario para filtrar las peliculas por nombre y director
+     formFilter: {
+      nombreP: '',
+      directorP: '',
+       selected: null,
+      fechaInicio: '',
+      fechaFin: ''
+    },
       // Variable para mostrar u ocultar el scroll 
       showElement: true,
 // Variable para guardar la posicion del scroll
@@ -171,7 +231,9 @@ export default {
         duracion: '',
         selected: null,
         categorias: [],
+        fecha: '',
       },
+     
       // Variable para mostrar el error del formulario
       show: true,
       formError: '',
@@ -184,7 +246,8 @@ export default {
         director: '',
         enlace: '',
         duracion: '',
-        categoria: { nombre: '' }
+        categoria: { nombre: '' },
+        fecha: ''
       }
     }
   },
@@ -203,6 +266,12 @@ export default {
     // Elimina el evento del scroll
     window.removeEventListener("scroll", this.onScroll);
   },
+  // Metodo para observar el cambio de la categoria seleccionada
+  watch: {
+  'formFilter.selected': function(newValue, oldValue) {
+    console.log('id selecionado', newValue);
+  }
+},
   // Metodo para aplicar la animacion
   methods: {
 // Metodo para aplicar la animacion
@@ -236,6 +305,7 @@ export default {
         const data = await peliculasAxios.obtenerPeliculas();
         // Guarda las peliculas en la variable peliculas
         this.peliculas = data.object;
+        // console.log(this.peliculas)
       } catch (error) {
         console.error('Error al obtener las películas', error);
       }
@@ -244,9 +314,9 @@ export default {
     onScroll() {
 // Variable para guardar la posicion del scroll 
       const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-      console.log(currentScrollPosition);
+      // console.log(currentScrollPosition);
 // Si la diferencia entre la posicion actual y la ultima posicion es menor a 20
-      if (Math.abs(currentScrollPosition - this.lastScrollPosition) < 20) {
+      if (Math.abs(currentScrollPosition - this.lastScrollPosition) < 1000) {
         // No hace nada
         return;
       }
@@ -308,7 +378,9 @@ export default {
           this.peliculaSeleccionada.director,
           this.peliculaSeleccionada.duracion,
           this.peliculaSeleccionada.enlace,
-          this.peliculaSeleccionada.categoria.id
+          this.peliculaSeleccionada.categoria.id,
+          this.peliculaSeleccionada.fecha          
+
         );
         alert('Película editada correctamente');
         // Llamada a la funcion obtenerPeliculas para actualizar la lista de peliculas
@@ -333,7 +405,7 @@ export default {
       // Llamada a la funcion crearPelicula de peliculasAxios
       try {
         // Se le pasa el titulo, director, duracion, enlace y categoria del formulario
-        await peliculasAxios.crearPelicula(this.form.titulo, this.form.director, this.form.duracion, this.form.enlace, this.form.selected);
+        await peliculasAxios.crearPelicula(this.form.titulo, this.form.director, this.form.duracion, this.form.enlace, this.form.selected, this.form.fecha);
 
         alert('Formulario enviado correctamente');
         this.obtenerPeliculas();
@@ -354,6 +426,16 @@ export default {
       event.preventDefault();
       this.resetForm();
     },
+    onResetFilter(event) {
+      event.preventDefault();
+      this.resetFormFilter();
+    },
+    resetFormFilter() {
+      this.formFilter = {
+        nombreP: '',
+        directorP: ''
+      };
+    },
     resetForm() {
       // Resetea el formulario
       this.form = {
@@ -365,7 +447,51 @@ export default {
         categorias: this.form.categorias
       };
       this.formError = '';
-    }
+    },
+
+   async onSubmitFilter(event) {
+  event.preventDefault();
+  // console.log(this.formFilter); // Asegúrate de que formFilter esté definido aquí
+  try {
+    const data = await peliculasFilter.obtenerPeliculasConFiltro(this.formFilter.nombreP, this.formFilter.directorP);
+    console.log(data.object)
+    this.peliculas = data.object;
+  } catch (error) {
+    console.error('Error al filtrar las películas', error);
+  }
+},
+async onSubmitFilterCat(event) {
+  event.preventDefault();
+
+  try {
+    // Obtener el ID de la categoría seleccionada
+    const categoryId = this.formFilter.selected;
+    
+    // Aquí puedes enviar el ID de la categoría seleccionada al backend o realizar cualquier otra acción que necesites
+    // console.log('ID de la categoría seleccionada:', categoryId);
+
+    // Llamada a la función para filtrar las películas por categoría
+    const data = await peliculasFilter.obtenerPeliculasCategoria(categoryId);
+    // console.log(data.object)
+    this.peliculas = data.object;
+  } catch (error) {
+    console.error('Error al filtrar las películas', error);
+  }
+},
+async onSubmitFilterFec(event) {
+  event.preventDefault();
+  // console.log(this.formFilter); // Asegúrate de que formFilter esté definido aquí
+  try {
+    const data = await peliculasFilter.obtenerPeliculasFeha(this.formFilter.fechaInicio, this.formFilter.fechaFin);
+    console.log(data.object)
+    this.peliculas = data.object;
+  } catch (error) {
+    console.error('Error al filtrar las películas', error);
+  }
+},
+
+ 
+
   }
 }
 </script>
